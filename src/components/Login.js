@@ -1,21 +1,47 @@
-import React, { Component } from "react";
+import React, { useState } from "react";
 import './Login.css';
 import 'bootstrap/dist/css/bootstrap.css';
 import {
   BrowserRouter as Router,
   Routes,
   Route,
-  Link
+  Link,
+  useNavigate
 } from 'react-router-dom';
+import axios  from 'axios';
+import Dashboard from "./users/Dashboard";
+import AdminDashboard  from "./admin/AdminDashboard";
 
-//Sample commit
-class Login extends Component {
-  constructor(props) {
-    super(props);
+function Login(props){
 
-  }
+  
+    const [email, setUsername] = useState("");
+    const [password, setPassword] = useState("");
+    const [userDetails, setUser] = useState()
+    const navigate = useNavigate();
 
-  render() {
+    const handleSubmit = async e => {
+      e.preventDefault();
+      const user = { email, password };
+      // send the username and password to the server
+      const response = await axios.post(
+        "https://localhost:7069/User/Login",
+        user
+      );
+      // set the state of the user
+      setUser(response.data)
+      // store the user in localStorage
+      localStorage.setItem('userDetails', response.data[0].email)
+      localStorage.setItem('userId', response.data[0].id)
+      console.log(response.data)
+      if (response.data[0].type =='user') {
+        navigate('/dashboard');
+      }
+      if (response.data[0].type =='admin') {
+        navigate('admindashboard');
+      }
+    };
+    
     return (
       <section className="vh-100" style={{ backgroundColor: '#9A616D' }} >
         <div className="container py-5 h-100">
@@ -30,7 +56,7 @@ class Login extends Component {
                   <div className="col-md-6 col-lg-7 d-flex align-items-center">
                     <div className="card-body p-4 p-lg-5 text-black">
 
-                      <form>
+                      <form onSubmit={handleSubmit} >
 
                         <div className="d-flex align-items-center mb-3 pb-1">
                           <i className="fas fa-cubes fa-2x me-3"></i>
@@ -40,17 +66,17 @@ class Login extends Component {
                         <h5 className="fw-normal mb-3 pb-3" >Sign into your account</h5>
 
                         <div className="form-outline mb-4">
-                          <input type="email" id="form2Example17" className="form-control form-control-lg" />
-                          <label className="form-label" htmlFor="form2Example17">Email address</label>
+                          <input type="text" value={email} placeholder="enter a username" onChange={({ target }) => setUsername(target.value)}  className="form-control form-control-lg" />
+                         
                         </div>
 
                         <div className="form-outline mb-4">
-                          <input type="password" id="form2Example27" className="form-control form-control-lg" />
-                          <label className="form-label" htmlFor="form2Example27">Password</label>
+                          <input type="password"  value={password} placeholder="enter a password" onChange={({ target }) => setPassword(target.value)} className="form-control form-control-lg" />
+                         
                         </div>
 
                         <div className="pt-1 mb-4">
-                          <button className="btn btn-dark btn-lg btn-block" type="button">Login</button>
+                          <button className="btn btn-dark btn-lg btn-block" type="submit" >Login</button>
                         </div>
 
                         <a className="small text-muted" href="#!">Forgot password?</a>
@@ -70,6 +96,7 @@ class Login extends Component {
 
 
     )
-  }
+  
 }
+
 export default Login;

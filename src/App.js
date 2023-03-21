@@ -3,7 +3,6 @@ import {BrowserRouter as Router,Routes,Route} from 'react-router-dom';
 import Login from './components/Login'
 import Registration from './components/Registration';
 import Dashboard from './components/users/Dashboard';
-import Orders from './components/users/Orders';
 import Profile from './components/users/Profile';
 import Cart from './components/users/Cart';
 import Medicinedisplay from './components/users/Medicinedisplay';
@@ -11,6 +10,7 @@ import AdminDashboard from './components/admin/AdminDashboard';
 import CustomerList from './components/admin/CustomerList';
 import AdminOrders from './components/admin/AdminOrders';
 import Medicine from './components/admin/Medicine';
+import Orders from "./components/users/Orders";
 
 
 

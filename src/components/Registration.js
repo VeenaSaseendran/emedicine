@@ -1,12 +1,41 @@
-import React from "react";
+import React, { Component } from "react";
 import{
     BrowserRouter as Router,
     Routes,
     Route,
-    Link
+    Link,
+    useNavigate
   } from 'react-router-dom';
+  import axios  from 'axios';
 
-export default function Registration(){
+  class Registration extends Component{
+    constructor(props){
+      super(props);
+
+  }
+onRegisterUser=(e)=>{
+fetch('https://localhost:7069/User/Register',{
+      method: 'POST',
+        body: JSON.stringify({
+          firstName:this.refs.firstName.value,
+          lastName:this.refs.lastName.value,
+          email:this.refs.email.value,
+          password:this.refs.password.value,
+          type:"user",
+          status:"1",
+          createdOn:new Date()
+        }),
+        headers:{'Content-type':'application/json;charset=UTF-8',
+      },
+      })
+      .then(response=>response.json()).then(data=>{
+        if(data){      
+          alert('Registered Successfully') ;
+          this.props.history.push("/");
+        }
+      });
+  };
+render(){
     return(
     <section className="vh-100 bg-image"
     style={{backgroundImage:'url(${https://mdbcdn.b-cdn.net/img/Photos/new-templates/search-box/img4.webp})'}}>
@@ -21,34 +50,32 @@ export default function Registration(){
                 <form>
   
                   <div className="form-outline mb-4">
-                    <input type="text" id="form3Example1cg" className="form-control form-control-lg" />
-                    <label className="form-label" htmlFor="form3Example1cg">Your Name</label>
+                    <input type="text" id="firstName1" ref="firstName" className="form-control form-control-lg" />
+                    <label className="form-label" htmlFor="firstName1" >First Name</label>
+                  </div>
+                  <div className="form-outline mb-4">
+                    <input type="text" id="lasttName1" ref="lastName" className="form-control form-control-lg" />
+                    <label className="form-label" htmlFor="lasttName1" >Last Name</label>
                   </div>
   
                   <div className="form-outline mb-4">
-                    <input type="email" id="form3Example3cg" className="form-control form-control-lg" />
-                    <label className="form-label" htmlFor="form3Example3cg">Your Email</label>
+                    <input type="email" id="email1"  ref="email" className="form-control form-control-lg" />
+                    <label className="form-label" htmlFor="email1">Your Email</label>
                   </div>
   
                   <div className="form-outline mb-4">
-                    <input type="password" id="form3Example4cg" className="form-control form-control-lg" />
-                    <label className="form-label" htmlFor="form3Example4cg">Password</label>
+                    <input type="password" id="password1" ref="password" className="form-control form-control-lg" />
+                    <label className="form-label" htmlFor="password1">Password</label>
                   </div>
   
                   <div className="form-outline mb-4">
-                    <input type="password" id="form3Example4cdg" className="form-control form-control-lg" />
+                    <input type="password" id="form3Example4cdg"  ref="repeatpassword" className="form-control form-control-lg" />
                     <label className="form-label" htmlFor="form3Example4cdg">Repeat your password</label>
                   </div>
   
-                  <div className="form-check d-flex justify-content-center mb-5">
-                    <input className="form-check-input me-2" type="checkbox" value="" id="form2Example3cg" />
-                    <label className="form-check-label" htmlFor="form2Example3g">
-                      I agree all statements in <a href="#!" className="text-body"><u>Terms of service</u></a>
-                    </label>
-                  </div>
   
                   <div className="d-flex justify-content-center">
-                    <button type="button"
+                    <button type="button" onClick={this.onRegisterUser}
                       className="btn btn-success btn-block btn-lg gradient-custom-4 text-body">Register</button>
                   </div>
   
@@ -67,3 +94,5 @@ export default function Registration(){
        
     )
 }
+}
+export default Registration;

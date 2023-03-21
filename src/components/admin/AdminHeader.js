@@ -17,7 +17,7 @@ function AdminHeader(){
         <div className="collapse navbar-collapse" id="navbarNav">
           <ul className="navbar-nav">
             <li className="nav-item active">
-              <a className="nav-link" href="#">Welcome <span class="sr-only">(Admin)</span></a>
+              <a className="nav-link" href="#">Welcome <span class="sr-only">({localStorage.getItem('userDetails')})</span></a>
             </li>
             <li className="nav-item">
             <Link className="nav-link" to="/medicine">Medicine Management</Link>
@@ -28,7 +28,9 @@ function AdminHeader(){
             <li className="nav-item">
             <Link className="nav-link" to="/adminorders">Order Management</Link>
             </li>
-            
+            <li className="nav-item" >
+              <Link className="nav-link" to="/" >Logout</Link>
+            </li>
            
           </ul>
         </div>

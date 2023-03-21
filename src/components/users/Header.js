@@ -1,4 +1,4 @@
-import React from "react";
+import React,{useState,useEffect} from "react";
 import{
     BrowserRouter as Router,
     Routes,
@@ -7,6 +7,9 @@ import{
   } from 'react-router-dom';
 
  function Header(){
+  const [userDetails, setItems] = useState([]);
+
+
     return(
         <nav className="navbar navbar-dark bg-dark navbar-expand-lg navbar-light bg-light">
         <a className="navbar-brand" href="#">E-Medicine(User Panel)</a>
@@ -16,10 +19,10 @@ import{
         <div className="collapse navbar-collapse" id="navbarNav">
           <ul className="navbar-nav">
             <li className="nav-item active">
-              <a className="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+              <a className="nav-link" href="#">Home <span class="sr-only">({localStorage.getItem('userDetails')})</span></a>
             </li>
             <li className="nav-item">
-            <Link className="nav-link" to="/profile">My Profile</Link>
+            <Link className="nav-link" to="/profile"   > My Profile</Link>
             </li>
             <li className="nav-item">
             <Link className="nav-link" to="/orders">My Orders</Link>
@@ -29,6 +32,9 @@ import{
             </li>
             <li className="nav-item">
               <Link className="nav-link" to="/cart" >Cart</Link>
+            </li>
+            <li className="nav-item" >
+              <Link className="nav-link" to="/" >Logout</Link>
             </li>
            
           </ul>

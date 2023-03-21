@@ -1,73 +1,125 @@
-import React from "react";
+import React,{Component} from "react";
 import 'bootstrap';
+import axios  from 'axios';
+import { Button } from "bootstrap";
+import AdminHeader from "./AdminHeader";
 
- function Medicine(){
+class Medicine extends Component{
+  constructor(props) {
+    super(props);
+    this.state = {
+      message: null,
+      posts :[]
+    };
+  }
+ handleSubmit=(e) =>{  
+fetch('https://localhost:7069/AddMedicine',{
+      method: 'POST',      
+      body: JSON.stringify({ id:0,  
+        name:this.refs.Name.value,
+        manufacturer:this.refs.Manufacturer.value,
+        unitPrice:this.refs.UnitPrice.value,
+        discount:this.refs.Discount.value,
+        quantity:this.refs.Quantity.value,
+        expDate:"2023-03-16T23:52:22.543Z",
+        imageUrl:"uui",
+        status:1
+      }),
+      headers:{'Content-type':'application/json;charset=UTF-8',
+    },
+    })
+    .then(response=>response.json()).then(data=>{
+      if(data){
+       // this.setState({message:'New Medicine is Created Successfully'});
+        alert("New Medicine is Created Successfully") ;
+      }
+    });
+};
+onMedicineDelete =(id) =>
+{
+  fetch('https://localhost:7069/Delete?id='+id,{
+    method: 'DELETE' ,    
+  })
+  .then(response=>response.json()).then(data=>{
+    if(data){
+      this.setState({message:'Deleted Successfully'});
+      alert(this.state.message) ;
+    }
+  });
+};
+ 
+    componentDidMount()
+    {
+        axios.get("https://localhost:7069/GetAllMedicines").then(response =>{
+            console.log(response.data[0]);
+            this.setState({posts:response.data})
+        });
+    }
+    render(){
     return(
-        <section className="h-100 bg-dark">
+        <section className="h-100 bg-light">
+          <AdminHeader/>
         <div className="container py-5 h-100">
+        
           <div className="row d-flex justify-content-center align-items-center h-100">
-            <div className="col">
               <div className="card card-registration my-4">
-                <div className="row g-0">
-                  <div className="col-xl-6 d-none d-xl-block">
-                    
-                  </div>
-                  <div className="col-xl-6">
+              
+                  <div >
                     <div className="card-body p-md-5 text-black">
                       <h3 className="mb-5 text-uppercase">Medicine Management</h3>
       
                       <div className="row">
                         <div className="col-md-6 mb-4">
                           <div className="form-outline">
-                            <input type="text" id="form3Example1m" className="form-control form-control-lg" placeholder="Name" />                     
+                            <input type="text" id="form3Example1m" className="form-control form-control-lg" ref="Name" placeholder="Name" />                     
                           </div>
                         </div>
                         <div className="col-md-6 mb-4">
-                          <div claclassNames="form-outline">
-                            <input type="text" id="form3Example1n" className="form-control form-control-lg" placeholder="Manufacturer" />
+                          <div className="form-outline">
+                            <input type="text" id="form3Example1n" className="form-control form-control-lg" ref="Manufacturer" placeholder="Manufacturer" />
                           </div>
                         </div>
                       </div>   
                       <div className="row">
                         <div className="col-md-6 mb-4">
                           <div className="form-outline">
-                            <input type="text" id="form3Example1m" className="form-control form-control-lg" placeholder="Price" />                     
+                            <input type="text" id="form3Example1m" className="form-control form-control-lg" ref="UnitPrice" placeholder="Price" />                     
                           </div>
                         </div>
                         <div className="col-md-6 mb-4">
-                          <div claclassNames="form-outline">
-                            <input type="text" id="form3Example1n" className="form-control form-control-lg" placeholder="Discount" />
+                          <div className="form-outline">
+                            <input type="text" id="form3Example1n" className="form-control form-control-lg" ref="Discount" placeholder="Discount" />
                           </div>
                         </div>
                       </div>   
                       <div className="row">
                         <div className="col-md-6 mb-4">
                           <div className="form-outline">
-                            <input type="text" id="form3Example1m" className="form-control form-control-lg" placeholder="Quantity" />                     
+                            <input type="text" id="form3Example1m" className="form-control form-control-lg" ref="Quantity" placeholder="Quantity" />                     
                           </div>
                         </div>
                         <div className="col-md-6 mb-4">
-                        <div id="date-picker-example" class="md-form md-outline input-with-post-icon datepicker" inline="true">
-                         <input placeholder="Select date" type="text" id="example" class="form-control"/>
+                        <div id="date-picker-example" className="md-form md-outline input-with-post-icon datepicker" inline="true">
+                         <input placeholder="Select date" type="text" id="example" ref="ExpDate" className="form-control"/>
                         
-                        <i class="fas fa-calendar input-prefix"></i>
+                        <i className="fas fa-calendar input-prefix"></i>
                         </div>
                         </div>
                       </div>   
                       <div className="row">                   
                         <div className="col-md-6 mb-4">
-                          <div claclassNames="form-outline">
-                          <input type="file" class="form-control" id="customFile" />
+                          <div className="form-outline">
+                          <input type="file" className="form-control" id="customFile" />
                           </div>
                         </div>
                         <div className="col-md-2 mb-2">
-                          <div claclassNames="form-outline">
-                          <button type="button"
-                           className="btn btn-success btn-block btn-lg gradient-custom-4 text-body" style={{backgroundcolor:'blue'}} >Add</button>
+                          <div className="form-outline">
+                          <button type="button" onClick={this.handleSubmit}
+                           className="btn btn-success btn-block btn-lg gradient-custom-4 text-body"  >Add</button>
                           </div>
                           </div>
                           <div className="col-md-2 mb-2">
-                          <div claclassNames="form-outline">
+                          <div className="form-outline">
                           <button type="button"
                            className="btn btn-dark btn-lg  " >Reset</button>
 
@@ -75,7 +127,6 @@ import 'bootstrap';
                         </div>
                       </div>
                     </div>
-                  </div>
                 </div>
   <table className="table ">
   <thead className="thead-dark">
@@ -88,39 +139,35 @@ import 'bootstrap';
       <th scope="col">Quantity</th>
       <th scope="col">Exp Date</th>
       <th scope="col">Image</th>
+      <th scope="col">Action</th>
     </tr>
   </thead>
   <tbody>
-    <tr>
-      <th scope="row">1</th>
-      <td>Mark</td>
-      <td>Otto</td>
-      <td>@mdo</td>
-      <td>@mdo</td>
-      <td>@mdo</td>
-      <td>@mdo</td>
-      <td>@mdo</td>
-    </tr>
-    <tr>
-      <th scope="row">2</th>
-      <td>Jacob</td>
-      <td>Thornton</td>
-      <td>@fat</td>
-      <td>@fat</td>
-      <td>@fat</td>
-      <td>@fat</td>
-      <td>@fat</td>
-    </tr>
+  {this.state.posts.map((itm,k)=>{
+  return(
+      <tr key={itm.id} >
+        <th scope="row">{itm.id}</th>
+        <td>{itm.name}</td>
+        <td>{itm.manufacturer}</td>
+        <td>{itm.unitPrice}</td>
+        <td>{itm.discount}</td>
+        <td>{itm.quantity}</td>
+        <td>{itm.expDate}</td>
+        <td>{itm.imageUrl}</td>
+        <td><button type="button" onClick={() =>this.onMedicineDelete(itm.id)} >delete</button></td>
+      </tr>
+      )
+    })}
     
   </tbody>
         </table>
-              </div>
             </div>
           </div>
         </div>
         
       </section>
     )
+}
 }
 
 export default Medicine;

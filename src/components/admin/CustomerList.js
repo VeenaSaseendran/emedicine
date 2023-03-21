@@ -1,11 +1,27 @@
-import React from "react";
-
+import React,{Component} from "react";
+import axios  from 'axios';
 import AdminHeader from "./AdminHeader";
 
 
-function CustomerList(){
-    return(
-        
+class CustomerList extends Component{
+
+
+  constructor(props){
+      super(props);
+      this.state={
+          posts :[]
+      }
+  }
+
+  componentDidMount()
+  {
+      axios.get("https://localhost:7069/User/GetAll").then(response =>{
+          console.log(response.data[0]);
+          this.setState({posts:response.data})
+      });
+  }
+  render(){
+    return(    
         <div>
        <AdminHeader/>
        <br></br>
@@ -14,42 +30,37 @@ function CustomerList(){
         <table className="table ">
   <thead className="thead-dark">
     <tr>
-      <th scope="col">#</th>
+      <th scope="col">No</th>
       <th scope="col">First Name</th>
       <th scope="col">Last Name </th>
       <th scope="col">Email</th>
       <th scope="col">Password</th>
-      <th scope="col">Funds</th>
+      <th scope="col">Type</th>
       <th scope="col">Status</th>
       <th scope="col">Registration Date</th>
     </tr>
   </thead>
   <tbody>
+  {this.state.posts.map((itm,k)=>{
+return(
     <tr>
-      <th scope="row">1</th>
-      <td>Mark</td>
-      <td>Otto</td>
-      <td>@mdo</td>
-      <td>@mdo</td>
-      <td>@mdo</td>
-      <td>@mdo</td>
-      <td>@mdo</td>
+      <th scope="row">{itm.id}</th>
+      <td>{itm.firstName}</td>
+      <td>{itm.lastName}</td>
+      <td>{itm.email}</td>
+      <td>{itm.password}</td>
+      <td>{itm.type}</td>
+      <td>{itm.status}</td>
+      <td>{itm.createdOn}</td>
     </tr>
-    <tr>
-      <th scope="row">2</th>
-      <td>Jacob</td>
-      <td>Thornton</td>
-      <td>@fat</td>
-      <td>@fat</td>
-      <td>@fat</td>
-      <td>@fat</td>
-      <td>@fat</td>
-    </tr>
+    )
+  })}
     
   </tbody>
         </table>
         </div>
     )
+}
 }
 
 

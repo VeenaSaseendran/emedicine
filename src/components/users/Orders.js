@@ -1,79 +1,135 @@
-import React,{Component} from "react";
+import React,{Component, useState,useEffect} from "react";
 import 'bootstrap/dist/css/bootstrap.css';
+import axios  from 'axios';
+import Header from "./Header";
+import './PopUp.css';
 
-
-class Orders extends Component{
-    constructor(){
-        super();
+function Orders(){
+    const[orders,setOrders]=useState([]);
+    const[orderItems,setOrderItems]=useState([]);
+    const [isClicked, setIsCliked] = useState(false);
+    useEffect(()=>{
+        axios.get("https://localhost:7069/Order/GetAllByUserId?UserId=" +localStorage.getItem("userId"))
+          .then(res => res)
+          .then(
+            (result) => {
+              setOrders(result.data);
+            }
+          );
+      },[isClicked]);
+     
+      const handleDeleteClick = (orderId) => {
+       /// const index = orders.findIndex((order) => order.id === orderId);
+        console.log(orderId);
         
-        }
-   
-    render(){
-        return(
+        axios.delete('https://localhost:7069/Order/CancelOrder?Id='+orderId)
+        .then(response => response)
+        .then(
+          (result) => {
+            alert('Successfully Cancel the Order');
+            setIsCliked(bool => !bool)
+          }
+        );
+      };   
+      
+      
+    const [popup,setPop]=useState(false)
+    const handleClickOpen=(orderId)=>{
+        console.log(orderId);
+        setPop(!popup);
+        axios.get("https://localhost:7069/OrderItems/GetAllByOrderId?OrderId="+orderId)
+        .then(res => res)
+        .then(
+          (result) => {
+            setOrderItems(result.data);
+          }
+        );
+    }
+    const closePopup=()=>{
+        setPop(false)
+    }
+ 
+      return(    
         <div>
-        <table className="table">
+       <Header/>
+       <br></br>
+       <h1 style={{textAlign:'center'}} >My Orders</h1>
+       <br></br>
+        <table className="table ">
   <thead className="thead-dark">
     <tr>
-      <th scope="col">#</th>
-      <th scope="col">First</th>
-      <th scope="col">Last</th>
-      <th scope="col">Handle</th>
+      <th scope="col">No</th>
+      <th hidden="true"  scope="col">Order No</th>
+      <th scope="col">Order Total</th>
+      <th scope="col">Status</th>
+      <th scope="col">Action</th>
     </tr>
   </thead>
   <tbody>
-    <tr>
-      <th scope="row">1</th>
-      <td>Mark</td>
-      <td>Otto</td>
-      <td>@mdo</td>
-    </tr>
-    <tr>
-      <th scope="row">2</th>
-      <td>Jacob</td>
-      <td>Thornton</td>
-      <td>@fat</td>
-    </tr>
-    <tr>
-      <th scope="row">3</th>
-      <td>Larry</td>
-      <td>the Bird</td>
-      <td>@twitter</td>
-    </tr>
+  {orders.map(ord =>(
+  
+        <tr key={ord.id} >
+          
+        <td scope="row">{ord.id}</td>
+        <td hidden="true" >{ord.orderNo}</td>
+        <td>{ord.orderTotal}</td>
+        <td>{ord.orderStatus}</td>
+        <td><button type="button" onClick={() => handleDeleteClick(ord.id)} >Cancel Order</button></td>
+        <td><button type="button" onClick={() =>handleClickOpen(ord.id)} >Order Details</button></td>
+      </tr>
+    
+    ))}
+    
   </tbody>
         </table>
-
-        <table className="table">
-  <thead className="thead-light">
+        <div>
+         {
+             popup?
+            <div className="parentDisable" >
+                        <div className="popup">
+                        <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div className="modal-header">
+                                <h1 >Order Items</h1>
+                                <h1 onClick={closePopup}>X</h1>
+                            </div>
+                        </div>
+                        </div>
+                            <div>
+                            <table className="table ">
+  <thead className="thead-dark">
     <tr>
-      <th scope="col">#</th>
-      <th scope="col">First</th>
-      <th scope="col">Last</th>
-      <th scope="col">Handle</th>
+      <th   scope="col">Medicine</th>
+      <th scope="col">Unit Price</th>
+      <th scope="col">Discount</th>
+      <th scope="col">Quantity</th>
+      <th scope="col">Total Price</th>
     </tr>
   </thead>
   <tbody>
-    <tr>
-      <th scope="row">1</th>
-      <td>Mark</td>
-      <td>Otto</td>
-      <td>@mdo</td>
-    </tr>
-    <tr>
-      <th scope="row">2</th>
-      <td>Jacob</td>
-      <td>Thornton</td>
-      <td>@fat</td>
-    </tr>
-    <tr>
-      <th scope="row">3</th>
-      <td>Larry</td>
-      <td>the Bird</td>
-      <td>@twitter</td>
-    </tr>
+  {orderItems.map(ordItem =>(
+  
+        <tr key={ordItem.id} >
+        <td>{ordItem.medicineId}</td>
+        <td >{ordItem.unitPrice}</td>
+        <td>{ordItem.discount}</td>
+        <td>{ordItem.quantity}</td>
+        <td>{ordItem.totalPrice}</td>
+        
+      </tr>
+    
+    ))}
+    
   </tbody>
         </table>
+                            </div>
+                        </div>
+                    </div>:""
+         }
+                            
         </div>
+        </div>
+        
     )
 }
-}
-export default  Orders;
+export default Orders;

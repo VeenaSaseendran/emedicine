@@ -1,0 +1,13 @@
+* {
+    padding: 0;
+    margin: 0;
+  }
+ 
+  
+  .marquee {
+    font-size: 5em;
+    text-align: center;
+    font-weight: 600;
+    color: #57a815;
+  }
+  
