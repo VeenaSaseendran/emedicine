@@ -7,6 +7,7 @@ import './PopUp.css';
 function Orders(){
     const[orders,setOrders]=useState([]);
     const[orderItems,setOrderItems]=useState([]);
+    const[medicine,setMedicine]=useState([]);
     const [isClicked, setIsCliked] = useState(false);
     useEffect(()=>{
         axios.get("https://localhost:7069/Order/GetAllByUserId?UserId=" +localStorage.getItem("userId"))
@@ -14,13 +15,12 @@ function Orders(){
           .then(
             (result) => {
               setOrders(result.data);
+              getMedicineNames();
             }
           );
       },[isClicked]);
      
       const handleDeleteClick = (orderId) => {
-       /// const index = orders.findIndex((order) => order.id === orderId);
-        console.log(orderId);
         
         axios.delete('https://localhost:7069/Order/CancelOrder?Id='+orderId)
         .then(response => response)
@@ -47,7 +47,16 @@ function Orders(){
     }
     const closePopup=()=>{
         setPop(false)
-    }
+    };
+    const getMedicineNames = () => {
+      axios.get('https://localhost:7069/GetAllMedicines')
+        .then(res => res)
+        .then(
+          (result) => {
+              setMedicine(result.data);
+          }
+        );          
+  };
  
       return(    
         <div>
@@ -110,7 +119,10 @@ function Orders(){
   {orderItems.map(ordItem =>(
   
         <tr key={ordItem.id} >
-        <td>{ordItem.medicineId}</td>
+            <td scope="row">{medicine.map(med =>{
+                if(ordItem.medicineId===med.id)
+                {return med.name}
+            })}</td>
         <td >{ordItem.unitPrice}</td>
         <td>{ordItem.discount}</td>
         <td>{ordItem.quantity}</td>
